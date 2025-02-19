@@ -4,7 +4,7 @@ package com.br.wallaceartur.DevConnection.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import model.User;
+import com.br.wallaceartur.DevConnection.model.User;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

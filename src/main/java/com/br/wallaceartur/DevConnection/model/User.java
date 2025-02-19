@@ -1,10 +1,7 @@
-package model;
+package com.br.wallaceartur.DevConnection.model;
 
 import com.br.wallaceartur.DevConnection.enums.UserRole;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +14,8 @@ import java.util.UUID;
 @Table(name = "user_tb")
 public class User implements UserDetails {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     private String password;
@@ -29,7 +28,7 @@ public class User implements UserDetails {
 
     public User() {}
 
-    public User(String password, String email, UserRole userRole) {
+    public User(String email, String password, UserRole userRole) {
         this.password = password;
         this.email = email;
         this.userRole = userRole;
@@ -56,11 +55,13 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.userRole == userRole.ADMIN){
+        if (this.userRole == UserRole.ADMIN) {  // Corrigido para comparar com o enum UserRole
             return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        } else {
+            return List.of(new SimpleGrantedAuthority("ROLE_USER"));  // Corrigido para ROLE_USER (convenção)
         }
-        else return List.of(new SimpleGrantedAuthority("USER_ROLE"));
     }
+
 
     @Override
     public String getUsername() {
