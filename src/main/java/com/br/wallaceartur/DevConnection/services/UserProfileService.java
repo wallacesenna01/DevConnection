@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.Security;
 
 @Service
 public class UserProfileService {
@@ -41,7 +40,7 @@ public class UserProfileService {
         return fileName;
     }
 
-    public UserProfile userProfile(UpdateProfileDto updateProfileDto, MultipartFile profilePicture, MultipartFile coverPicture) throws IOException {
+    public UserProfile updateProfile(UpdateProfileDto updateProfileDto, MultipartFile profilePicture, MultipartFile coverPicture) throws IOException {
 
         UserProfile userProfile = getAuthenticatedUserProfile();
         if (updateProfileDto.getName() != null) userProfile.setName(updateProfileDto.getName());
@@ -69,9 +68,9 @@ public class UserProfileService {
             throw new RuntimeException("Usuário nao encontrado");
         }
 
-        String username = authentication.getName();
+        String name = authentication.getName();
 
-        return  userProfileRepository.findByUsername(username)
+        return  userProfileRepository.findByName(name)
                 .orElseThrow(() -> new RuntimeException("Perfil nao encontrado"));
     }
 
