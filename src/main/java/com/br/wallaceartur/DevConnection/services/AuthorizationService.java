@@ -4,6 +4,8 @@ import com.br.wallaceartur.DevConnection.dtos.AuthenticationDto;
 import com.br.wallaceartur.DevConnection.dtos.LoginResponseDto;
 import com.br.wallaceartur.DevConnection.dtos.RegisterDto;
 import com.br.wallaceartur.DevConnection.model.User;
+import com.br.wallaceartur.DevConnection.model.UserProfile;
+import com.br.wallaceartur.DevConnection.repositories.UserProfileRepository;
 import com.br.wallaceartur.DevConnection.repositories.UserRepository;
 import com.br.wallaceartur.DevConnection.security.TokenService;
 import jakarta.validation.Valid;
@@ -34,6 +36,9 @@ public class AuthorizationService implements UserDetailsService {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private UserProfileRepository userProfileRepository;
+
 
    private AuthenticationManager authenticationManagerBean;
 
@@ -59,6 +64,17 @@ public class AuthorizationService implements UserDetailsService {
         String encryptedPassword = new BCryptPasswordEncoder().encode(registerDto.password());
         User newUser = new User(registerDto.email(), encryptedPassword, registerDto.role());
         this.userRepository.save(newUser);
+
+        UserProfile userProfile = new UserProfile();
+        userProfile.setUser(newUser);
+        userProfile.setName("Novo Usuario");
+        userProfile.setBios("");
+        userProfile.setProfilePictureUrl(null);
+        userProfile.setCoverPictureUrl(null);
+
+        userProfileRepository.save(userProfile);
+
+
         var token = tokenService.generateToken(newUser);
         return ResponseEntity.ok(new LoginResponseDto(token));
     }

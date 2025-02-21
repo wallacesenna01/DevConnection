@@ -30,6 +30,7 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll() // Agora qualquer um pode registrar
                         .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/profile/update/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))

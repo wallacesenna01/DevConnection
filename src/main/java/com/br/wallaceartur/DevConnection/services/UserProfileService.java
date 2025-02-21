@@ -1,8 +1,10 @@
 package com.br.wallaceartur.DevConnection.services;
 
 import com.br.wallaceartur.DevConnection.dtos.UpdateProfileDto;
+import com.br.wallaceartur.DevConnection.model.User;
 import com.br.wallaceartur.DevConnection.model.UserProfile;
 import com.br.wallaceartur.DevConnection.repositories.UserProfileRepository;
+import com.br.wallaceartur.DevConnection.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +24,9 @@ public class UserProfileService {
 
     @Autowired
     private UserProfileRepository userProfileRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public String saveImage(MultipartFile image) throws IOException {
         if (image == null || image.isEmpty()) {
@@ -68,9 +73,14 @@ public class UserProfileService {
             throw new RuntimeException("Usuário nao encontrado");
         }
 
-        String name = authentication.getName();
+        String username = authentication.getName();
 
-        return  userProfileRepository.findByName(name)
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+
+
+        return  userProfileRepository.findByUser(user)
                 .orElseThrow(() -> new RuntimeException("Perfil nao encontrado"));
     }
 
